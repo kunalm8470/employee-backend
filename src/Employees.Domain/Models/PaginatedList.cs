@@ -5,19 +5,19 @@ namespace Employees.Domain.Models
     public class PaginatedList<T> where T : class
     {
         [JsonPropertyName("page")]
-        public int PageIndex { get; }
+        public int PageIndex { get; set; }
 
         [JsonPropertyName("page_size")]
-        public int PageSize { get; }
+        public int PageSize { get; set; }
 
         [JsonPropertyName("total_pages")]
-        public int TotalPages { get; }
+        public int TotalPages { get; set; }
 
         [JsonPropertyName("total")]
-        public int TotalItems { get; }
+        public int TotalItems { get; set; }
 
         [JsonPropertyName("data")]
-        public List<T> Data { get; }
+        public List<T> Data { get; set; }
 
         public PaginatedList(IEnumerable<T> data, int totalItems, int pageIndex, int pageSize)
         {
@@ -29,9 +29,9 @@ namespace Employees.Domain.Models
             Data.AddRange(data);
         }
 
-        // This is for serialization.
-        private PaginatedList()
+        public PaginatedList()
         {
+
         }
     }
 }

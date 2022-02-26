@@ -4,17 +4,17 @@ namespace Employees.Api.Models.v1.Employee.Responses
 {
     public class EmployeeDto
     {
-        [JsonPropertyName("code")]
-        public Guid Code { get; set; }
-
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
 
         [JsonPropertyName("first_name")]
         public string FirstName { get; set; }
 
         [JsonPropertyName("last_name")]
         public string LastName { get; set; }
+
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
 
         [JsonPropertyName("gender")]
         public char GenderAbbreviation { get; set; }
@@ -23,7 +23,7 @@ namespace Employees.Api.Models.v1.Employee.Responses
         public decimal Salary { get; set; }
 
         [JsonPropertyName("department")]
-        public string Department { get; set; }
+        public EmployeeDepartment Department { get; set; }
 
         [JsonPropertyName("manager")]
         public EmployeeManager Manager { get; set; }
@@ -33,5 +33,10 @@ namespace Employees.Api.Models.v1.Employee.Responses
 
         [JsonPropertyName("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        public EmployeeDto()
+        {
+
+        }
     }
 }

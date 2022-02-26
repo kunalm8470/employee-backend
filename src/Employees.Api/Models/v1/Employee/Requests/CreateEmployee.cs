@@ -10,6 +10,9 @@ namespace Employees.Api.Models.v1.Employee.Requests
         [JsonPropertyName("last_name")]
         public string LastName { get; set; }
 
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
+
         [JsonPropertyName("gender")]
         public char Gender { get; set; }
 

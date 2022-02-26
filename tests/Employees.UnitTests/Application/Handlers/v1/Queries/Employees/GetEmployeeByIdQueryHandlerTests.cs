@@ -3,7 +3,6 @@ using Employees.Application.Handlers.v1.Queries.Employees;
 using Employees.Domain.Interfaces;
 using Employees.Domain.Models;
 using Moq;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -25,23 +24,23 @@ namespace Employees.UnitTests.Application.Handlers.v1.Queries.Employees
         public async Task Handle_ValidQuery_ShouldReturnEmployee()
         {
             // Arrange
-            Guid code = Guid.NewGuid();
+            int id = 1;
 
             Employee employee = new Fixture()
                 .Build<Employee>()
-                .With(e => e.Code, code)
+                .With(x => x.Id, id)
                 .Create();
 
-            GetEmployeeByIdQuery getByIdQuery = new() { Id = It.IsAny<int>() };
-            _mockEmployeeRepository.Setup(x => x.GetByIdAsync(getByIdQuery.Id, CancellationToken.None)).ReturnsAsync(employee);
+            GetEmployeeByIdQuery getByIdQuery = new() { Id = id };
+            _mockEmployeeRepository.Setup(x => x.GetByIdAsync(It.Is<int>(x => x == id), CancellationToken.None)).ReturnsAsync(employee);
 
             // Act
             Employee? found = await _sut.Handle(getByIdQuery, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(found);
-            Assert.Equal(code, found?.Code);
-            _mockEmployeeRepository.VerifyAll();
+            Assert.Equal(id, found?.Id);
+            _mockEmployeeRepository.Verify(x => x.GetByIdAsync(It.Is<int>(x => x == id), CancellationToken.None), Times.Once());
         }
     }
 }

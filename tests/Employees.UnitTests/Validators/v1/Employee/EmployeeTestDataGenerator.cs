@@ -30,6 +30,21 @@ namespace Employees.UnitTests.Validators.v1.Employee
             yield return new object[] { string.Empty, string.Empty };
         }
 
+        public static IEnumerable<object[]> ValidEmails()
+        {
+            yield return new object[] { "John.Doe@fakecompany.com" };
+            yield return new object[] { "Jane.Doe@fakecompany.com" };
+            yield return new object[] { "Janey.Doe@fakecompany.com" };
+            yield return new object[] { "Joe.Doe@fakecompany.com" };
+        }
+
+        public static IEnumerable<object[]> InvalidEmails()
+        {
+            yield return new object[] { "John.Doefakecompany.com" };
+            yield return new object[] { null };
+            yield return new object[] { "Janey.Doe@fakecompany" };
+        }
+
         public static IEnumerable<object[]> ValidGenders()
         {
             yield return new object[] { 'm' };
@@ -69,7 +84,6 @@ namespace Employees.UnitTests.Validators.v1.Employee
             yield return new object[] { -0.1111M };
         }
 
-
         public static IEnumerable<object[]> ValidManagerId()
         {
             yield return new object[] { 1 };
@@ -82,7 +96,6 @@ namespace Employees.UnitTests.Validators.v1.Employee
             yield return new object[] { 0 };
             yield return new object[] { -1 };
         }
-
 
         public static IEnumerable<object[]> ValidDepartmentId()
         {

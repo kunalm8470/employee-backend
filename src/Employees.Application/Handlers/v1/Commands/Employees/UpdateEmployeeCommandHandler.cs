@@ -1,5 +1,6 @@
 ﻿using Employees.Domain.Exceptions;
 using Employees.Domain.Interfaces;
+using Employees.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,12 +18,20 @@ namespace Employees.Application.Handlers.v1.Commands.Employees
         {
             try
             {
-                if (await _employeeRepository.GetByIdAsync(request.Employee.Id, cancellationToken).ConfigureAwait(false) == default)
+                Employee? found = await _employeeRepository.GetByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+                if (found == default)
                 {
                     throw new ItemNotFoundException();
                 }
 
-                await _employeeRepository.UpdateAsync(request.Employee, cancellationToken).ConfigureAwait(false);
+                found.FirstName = request.Employee.FirstName;
+                found.LastName = request.Employee.LastName;
+                found.GenderAbbreviation = request.Employee.GenderAbbreviation;
+                found.Salary = request.Employee.Salary;
+                found.ManagerId = request.Employee.ManagerId;
+                found.DepartmentId = request.Employee.DepartmentId;
+
+                await _employeeRepository.UpdateAsync(found, cancellationToken).ConfigureAwait(false);
                 return Unit.Value;
             }
             catch (DbUpdateException ex)

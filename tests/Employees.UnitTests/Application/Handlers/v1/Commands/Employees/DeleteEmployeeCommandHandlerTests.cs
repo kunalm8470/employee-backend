@@ -25,11 +25,8 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
         public async Task Handle_ValidCommand_ShouldCallDeleteAsync()
         {
             // Arrange
-            Guid code = Guid.NewGuid();
-
             Employee employee = new Fixture()
                 .Build<Employee>()
-                .With(e => e.Code, code)
                 .Create();
 
             DeleteEmployeeCommand updateEmployeeCommand = new() { Id = It.IsAny<int>() };
@@ -46,18 +43,17 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
         public async Task Handle_ValidCommand_DeleteEmployee()
         {
             // Arrange
-            Guid code = Guid.NewGuid();
+            int id = 1;
 
             Employee employee = new Fixture()
                 .Build<Employee>()
-                .With(e => e.Code, code)
                 .Create();
 
             DeleteEmployeeCommand deleteEmployeeCommand = new() { Id = It.IsAny<int>() };
 
             _mockEmployeeRepository.Setup(x => x.GetByIdAsync(deleteEmployeeCommand.Id, CancellationToken.None)).ReturnsAsync(employee);
             _mockEmployeeRepository.Setup(x => x.DeleteAsync(
-                    It.Is<Employee>(em => em.Code == code),
+                    It.Is<Employee>(em => em.Id == id),
                     CancellationToken.None
                 )
             ).Returns(Task.CompletedTask);
@@ -66,7 +62,7 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
             await _sut.Handle(deleteEmployeeCommand, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
-            _mockEmployeeRepository.VerifyAll();
+            _mockEmployeeRepository.Verify(x => x.DeleteAsync(employee, CancellationToken.None), Times.Once());
         }
     }
 }

@@ -2,16 +2,14 @@
 {
     public class Employee : BaseEntity<int>
     {
-        public Guid Code { get; set; }
-
-        public string Email { get; private set; }
-
         public string FirstName { get; set; }
         
         public string LastName { get; set; }
-        
+
         public char GenderAbbreviation { get; set; }
-        
+
+        public string Email { get; set; }
+
         public decimal Salary { get; set; }
 
         public int? ManagerId { get; set; }

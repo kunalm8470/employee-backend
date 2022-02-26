@@ -14,31 +14,27 @@ namespace Employees.Infrastructure.Data.Config
                 .UseIdentityColumn(1)
                 .HasColumnOrder(0);
 
-            builder.Property(e => e.Code)
-                .IsRequired(true)
-                .HasColumnOrder(1);
-
             builder.Property(e => e.FirstName)
                 .IsRequired(true)
                 .HasMaxLength(250)
-                .HasColumnOrder(2);
+                .HasColumnOrder(1);
 
             builder.Property(e => e.LastName)
                 .IsRequired(true)
                 .HasMaxLength(250)
-                .HasColumnOrder(3);
+                .HasColumnOrder(2);
 
             builder.Property(e => e.Email)
-            .HasColumnOrder(4)
-            .HasComputedColumnSql("[FirstName] + '.' + [LastName] + '@fakecompany.com'", stored: true);
+                .HasMaxLength(256)
+                .HasColumnOrder(3);
 
             builder.Property(e => e.GenderAbbreviation)
-                .HasColumnOrder(5)
+                .HasColumnOrder(4)
                 .IsRequired(true);
 
             builder.Property(e => e.Salary)
                 .IsRequired(true)
-                .HasColumnOrder(6)
+                .HasColumnOrder(5)
                 .HasColumnType("decimal(18,2)");
         }
     }

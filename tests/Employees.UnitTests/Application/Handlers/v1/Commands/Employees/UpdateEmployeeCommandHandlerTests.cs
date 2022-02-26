@@ -22,44 +22,23 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
         }
 
         [Fact]
-        public async Task Handle_ValidCommand_ShouldCallUpdateAsync()
-        {
-            // Arrange
-            Guid code = Guid.NewGuid();
-
-            Employee employee = new Fixture()
-                .Build<Employee>()
-                .With(e => e.Code, code)
-                .Create();
-
-            UpdateEmployeeCommand updateEmployeeCommand = new() { Employee = employee };
-            _mockEmployeeRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(employee);
-
-            // Act
-            await _sut.Handle(updateEmployeeCommand, CancellationToken.None).ConfigureAwait(false);
-
-            // Assert
-            _mockEmployeeRepository.Verify(x => x.UpdateAsync(It.IsAny<Employee>(), CancellationToken.None), Times.Once());
-        }
-
-        [Fact]
         public async Task Handle_ValidCommand_UpdateEmployee()
         {
             // Arrange
-            Guid code = Guid.NewGuid();
+            int id = 1;
 
             Employee employee = new Fixture()
             .Build<Employee>()
-            .With(e => e.Code, code)
             .Create();
 
             UpdateEmployeeCommand updateEmployeeCommand = new() 
             { 
+                Id = id,
                 Employee = new Employee
                 {
-                    Code = code,
                     FirstName = "Jane",
                     LastName = "Doe",
+                    Email = "Jane.Doe@fakecompany.com",
                     GenderAbbreviation = 'F',
                     Salary = 70000.01M,
                     ManagerId = default,
@@ -69,9 +48,9 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
                 }
             };
 
-            _mockEmployeeRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>(), CancellationToken.None)).ReturnsAsync(employee);
+            _mockEmployeeRepository.Setup(x => x.GetByIdAsync(It.Is<int>(x => x == id), CancellationToken.None)).ReturnsAsync(employee);
             _mockEmployeeRepository.Setup(x => x.UpdateAsync(
-                    It.Is<Employee>(em => em.Code == updateEmployeeCommand.Employee.Code),
+                    It.Is<Employee>(em => em.Id == updateEmployeeCommand.Id),
                     CancellationToken.None
                 )
             ).Returns(Task.CompletedTask);
@@ -80,7 +59,7 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
             await _sut.Handle(updateEmployeeCommand, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
-            _mockEmployeeRepository.VerifyAll();
+            _mockEmployeeRepository.Verify(x => x.UpdateAsync(It.IsAny<Employee>(), CancellationToken.None), Times.Once());
         }
     }
 }

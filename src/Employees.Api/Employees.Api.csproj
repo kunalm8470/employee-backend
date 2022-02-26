@@ -23,4 +23,9 @@
     <ProjectReference Include="..\Employees.Infrastructure\Employees.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+     <InternalsVisibleTo Include="Employees.IntegrationTests" />
+  </ItemGroup>
+
+
 </Project>

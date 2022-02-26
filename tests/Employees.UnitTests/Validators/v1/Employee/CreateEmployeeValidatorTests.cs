@@ -51,6 +51,40 @@ namespace Employees.UnitTests.Validators.v1.Employee
             _ = result.ShouldHaveValidationErrorFor(x => x.FirstName);
             _ = result.ShouldHaveValidationErrorFor(x => x.LastName);
         }
+        
+        [Theory]
+        [MemberData(nameof(EmployeeTestDataGenerator.ValidEmails), MemberType = typeof(EmployeeTestDataGenerator))]
+        public void Email_WhenGivenValidEmailAddress_ShouldNotHaveValidationError(string email)
+        {
+            // Arrange
+            CreateEmployee model = new()
+            {
+                Email = email
+            };
+
+            // Act
+            var result = _sut.TestValidate(model);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Email);
+        }
+
+        [Theory]
+        [MemberData(nameof(EmployeeTestDataGenerator.InvalidEmails), MemberType = typeof(EmployeeTestDataGenerator))]
+        public void Email_WhenGivenInvalidEmailAddress_ShouldHaveValidationError(string email)
+        {
+            // Arrange
+            CreateEmployee model = new()
+            {
+                Email = email
+            };
+
+            // Act
+            var result = _sut.TestValidate(model);
+
+            // Assert
+            _ = result.ShouldHaveValidationErrorFor(x => x.Email);
+        }
 
         [Theory]
         [MemberData(nameof(EmployeeTestDataGenerator.ValidGenders), MemberType = typeof(EmployeeTestDataGenerator))]

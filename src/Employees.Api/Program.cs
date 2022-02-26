@@ -97,10 +97,9 @@ app.MapControllers();
 app.Logger.LogInformation("Seeding Database");
 using (IServiceScope scope = app.Services.CreateScope())
 {
-    IServiceProvider provider = scope.ServiceProvider;
     try
     {
-        EmployeesContext context = provider.GetRequiredService<EmployeesContext>();
+        EmployeesContext context = scope.ServiceProvider.GetRequiredService<EmployeesContext>();
         await EmployeeContextSeed.SeedAsync(context, app.Logger).ConfigureAwait(false);
     }
     catch (Exception ex)
@@ -110,3 +109,5 @@ using (IServiceScope scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }

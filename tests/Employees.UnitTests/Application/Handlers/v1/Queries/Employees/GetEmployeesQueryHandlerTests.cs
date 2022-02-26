@@ -26,9 +26,9 @@ namespace Employees.UnitTests.Application.Handlers.v1.Queries.Employees
         public async Task Handle_ValidQuery_EmployeesReturned()
         {
             // Arrange
-            const int count = 10;
-            const int page = 1;
-            const int limit = 10;
+            int count = 10;
+            int page = 1;
+            int limit = 10;
 
             GetEmployeesQuery query = new() { Page = page, Limit = limit };
 
@@ -46,7 +46,7 @@ namespace Employees.UnitTests.Application.Handlers.v1.Queries.Employees
             Assert.NotNull(list);
             Assert.Equal(count, list.Count);
             Assert.All(list, (x) => Assert.IsType<Employee>(x));
-            _mockEmployeeRepository.VerifyAll();
+            _mockEmployeeRepository.Verify(x => x.GetByPageAsync(page, limit, CancellationToken.None), Times.Once());
         }
     }
 }

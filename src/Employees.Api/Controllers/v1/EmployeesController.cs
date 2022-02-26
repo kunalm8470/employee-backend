@@ -49,9 +49,14 @@ namespace Employees.Api.Controllers.v1
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<Employee>>> GetById([FromRoute] int id)
+        public async Task<ActionResult<PaginatedList<EmployeeDto>>> GetById([FromRoute] int id)
         {
             Employee? found = await _mediator.Send(new GetEmployeeByIdQuery { Id = id }).ConfigureAwait(false);
+
+            if (found == default)
+            {
+                return NotFound();
+            }
 
             return Ok(_mapper.Map<EmployeeDto>(found));
         }
@@ -67,14 +72,14 @@ namespace Employees.Api.Controllers.v1
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<Employee>> Create([FromBody] CreateEmployee createEmployee)
+        public async Task<ActionResult<EmployeeDto>> Create([FromBody] CreateEmployee createEmployee)
         {
             Employee created = await _mediator.Send(new CreateEmployeeCommand
             {
                 Employee = _mapper.Map<Employee>(createEmployee)
             }).ConfigureAwait(false);
 
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, _mapper.Map<EmployeeDto>(created));
         }
 
         /// <summary>
@@ -84,14 +89,15 @@ namespace Employees.Api.Controllers.v1
         /// <response code="200">Returned if the employee was updated</response>
         /// <response code="400">Returned if the model couldn't be parsed / couldn't be updated</response>
         /// <response code="404">Returned if the employees doesn't exist</response>
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update([FromBody] UpdateEmployee updateEmployee)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEmployee updateEmployee)
         {
             await _mediator.Send(new UpdateEmployeeCommand
             {
+                Id = id,
                 Employee = _mapper.Map<Employee>(updateEmployee)
             }).ConfigureAwait(false);
 
@@ -107,7 +113,7 @@ namespace Employees.Api.Controllers.v1
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await _mediator.Send(new DeleteEmployeeCommand { Id = id }).ConfigureAwait(false);
 

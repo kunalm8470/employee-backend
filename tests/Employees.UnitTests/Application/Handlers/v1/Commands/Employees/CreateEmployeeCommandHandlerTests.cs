@@ -37,13 +37,13 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
         public async Task Handle_ValidCommand_ReturnCreatedEmployee()
         {
             // Arrange
-            Guid code = Guid.NewGuid();
+            string email = "John.Doe@fakecompany.com";
 
             Employee employee = new()
             {
-                Code = code,
                 FirstName = "John",
                 LastName = "Doe",
+                Email = email,
                 GenderAbbreviation = 'M',
                 Salary = 70000.01M,
                 ManagerId = default,
@@ -53,15 +53,15 @@ namespace Employees.UnitTests.Application.Handlers.v1.Commands.Employees
 
             CreateEmployeeCommand createEmployeeCommand = new() { Employee = employee };
 
-            _mockEmployeeRepository.Setup(x => x.AddAsync(It.Is<Employee>(e => e.Code == code), CancellationToken.None)).ReturnsAsync(employee);
+            _mockEmployeeRepository.Setup(x => x.AddAsync(It.Is<Employee>(e => e.Email == email), CancellationToken.None)).ReturnsAsync(employee);
 
             // Act
             Employee result = await _sut.Handle(createEmployeeCommand, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
-            _mockEmployeeRepository.VerifyAll();
+            _mockEmployeeRepository.Verify(x => x.AddAsync(employee, CancellationToken.None), Times.Once());
             Assert.NotNull(result);
-            Assert.Equal(code, result.Code);
+            Assert.Equal(email, result.Email);
         }
     }
 }

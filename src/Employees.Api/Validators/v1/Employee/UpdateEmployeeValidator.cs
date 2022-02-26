@@ -1,4 +1,5 @@
 ﻿using Employees.Api.Models.v1.Employee.Requests;
+using Employees.Domain.Extensions;
 using FluentValidation;
 
 namespace Employees.Application.Validators.v1.Employee

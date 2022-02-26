@@ -1,4 +1,5 @@
 ﻿using Employees.Api.Models.v1.Employee.Requests;
+using Employees.Domain.Extensions;
 using FluentValidation;
 
 namespace Employees.Api.Validators.v1.Employee
@@ -30,6 +31,10 @@ namespace Employees.Api.Validators.v1.Employee
             RuleFor(e => e.LastName)
                 .MaximumLength(250)
                 .WithMessage("The last name must be less than 250 characters");
+
+            RuleFor(e => e.Email)
+                .Must(x => EmailExtensions.IsValidEmail(x))
+                .WithMessage("Invalid email");
 
             RuleFor(e => e.Gender)
                 .Must(e => char.ToUpper(e) == 'M' || char.ToUpper(e) == 'F' || char.ToUpper(e) == 'O')

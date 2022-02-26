@@ -4,11 +4,8 @@ namespace Employees.Api.Models.v1.Employee.Responses
 {
     public class EmployeeManager
     {
-        [JsonPropertyName("code")]
-        public Guid Code { get; set; }
-
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
 
         [JsonPropertyName("first_name")]
         public string FirstName { get; set; }
@@ -16,7 +13,10 @@ namespace Employees.Api.Models.v1.Employee.Responses
         [JsonPropertyName("last_name")]
         public string LastName { get; set; }
 
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
+
         [JsonPropertyName("department")]
-        public string? Department { get; set; }
+        public EmployeeDepartment Department { get; set; }
     }
 }
